@@ -1,0 +1,83 @@
+.\"
+.\" Copyright (c) 2024 Vitaly Sinilin <vs@kp4.ru>
+.\"
+.TH lw 8 "13 May 2024" lw
+.SH NAME
+lw \- a minimalistic log watch daemon
+.SH SYNOPSIS
+.B lw
+.RB [ -f | -d ]
+.RB [ -p
+.IR pidfile ]
+.I config-file
+.br
+.SH DESCRIPTION
+The
+.B lw
+daemon monitors changes in a configured set of log files and runs other
+programs once any of configured patterns is found to be added to a log file.
+.br
+.SH OPTIONS
+.TP
+.B -d
+Debug mode. Like
+.BR -f ,
+but logging is redirected to stderr instead of syslog.
+.TP
+.B -f
+Do not daemonize (i.e. run in the foreground).
+.TP
+.B -h
+Display short help and exit.
+.TP
+.B -p \fIpidfile
+Write own process ID to
+.IR pidfile .
+If not specified, process-id file is not created.
+.TP
+.B -v
+Show lw version and exit.
+.SH CONFIGURATION FILE
+.B lw
+configuration file is a plain-text file that has the following format:
+
+Empty lines and lines beginning with the # character are ignored.
+
+The configuration options are as follows:
+.TP
+.BI "file " filename
+Adds
+.I filename
+to the list of monitored files.
+.TP
+.BI "pattern " regex
+Adds a new pattern to be looked for in the last configured file.
+.I regex
+shall be a valid POSIX Extended Regular Expression.
+.TP
+.BI "action " "command args..."
+Specifies the command to be executed when any of the patterns configured
+after the last
+.B action
+option is found.
+.I args
+can contain special words
+.BR $0 ", " $1 ", " $2 ", ... " $9 .
+These words are substituted with corresponding captured parenthesized
+subpatterns of regular expression. To avoid expansion of such words
+they shall be preceeded with a backslash. Two backslashes at the very
+beginning of a word are interpreted as a single literal backslash.
+.SH SIGNALS
+On receiving the
+.B HUP
+signal
+.B lw
+reopens all monitored files.  (The configuration file is
+.B not
+reread!)
+.SH AUTHOR
+.B lw
+and its manual page were written by Vitaly Sinilin <vs@kp4.ru> and
+are licensed under the terms of the MIT license.
+.SH SEE ALSO
+.BR regex (7)

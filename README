@@ -1,0 +1,22 @@
+lw, Copyright (c) 2024 by Vitaly Sinilin <vs@kp4.ru>. All rights reserved.
+Published under the terms of the MIT License.
+
+lw is a minimalistic log watch daemon written in pure C with no external
+dependencies. It monitors changes in a configured set of log files and
+runs other programs once any of configured patterns is found to be added
+to a log file.
+
+
+INSTALLATION
+
+To install the daemon system-wide type
+
+   make
+   sudo make PREFIX=/usr install
+
+The makefile also understands DESTDIR for a staged installation.
+
+
+USAGE
+
+Find details in the manual page (lw.8).
